@@ -7,8 +7,7 @@
     <title>Secret Shown</title>
 </head>
 <body>
-    <h1>Here is your secret:</h1>
-    <pre>%%SECRET%%</pre>
-    <small>This secret can be viewed %%REMAININGVIEWS%% more times.</small>
+    <h1>Your secret was saved!</h1>
+    <p>Visit <a href="%%TARGET%%">%%TARGET%%</a> to view your secret.</p>
 </body>
 </html>

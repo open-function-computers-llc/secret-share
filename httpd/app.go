@@ -7,6 +7,7 @@ import (
 )
 
 func runApp(c *cli.Context) error {
+	initCache()
 	buildViews()
 	for path, handler := range webRoutes() {
 		http.HandleFunc(path, handler)
@@ -18,6 +19,7 @@ func runApp(c *cli.Context) error {
 func webRoutes() map[string]func(http.ResponseWriter, *http.Request) {
 	routes := make(map[string]func(http.ResponseWriter, *http.Request))
 	routes["/"] = home
+	routes["/store"] = store
 	routes["/show/"] = lookup
 
 	return routes
