@@ -10,10 +10,12 @@ func home(w http.ResponseWriter, r *http.Request) {
 	if path == "" {
 		path = "home"
 	}
-	if vb.hasView(path) {
-		io.WriteString(w, vb.views[path])
+
+	data, err := Asset("views/home.tpl")
+	if err != nil {
+		http.Error(w, "Could not find valid tpl file", 500)
 		return
 	}
 
-	io.WriteString(w, "Hello! Please feel free to share a secret:"+path)
+	io.WriteString(w, buildView(string(data)))
 }

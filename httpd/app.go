@@ -8,10 +8,11 @@ import (
 
 func runApp(c *cli.Context) error {
 	initCache()
-	buildViews()
+
 	for path, handler := range webRoutes() {
 		http.HandleFunc(path, handler)
 	}
+	http.HandleFunc("/assets/", bundledAsset)
 	http.ListenAndServe(":8000", nil)
 	return nil
 }

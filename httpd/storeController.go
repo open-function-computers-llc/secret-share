@@ -4,6 +4,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/open-function-computers-llc/secret-share/secret"
 
@@ -34,8 +35,16 @@ func store(w http.ResponseWriter, r *http.Request) {
 	s := secret.StorableSecret{
 		Value:          formValue,
 		RemainingViews: 5,
+		Expires:        time.Now(),
 	}
 	cache.Set(key, s)
-	output := strings.ReplaceAll(vb.views["saved"], "%%TARGET%%", "/show/"+key)
-	io.WriteString(w, output)
+
+	data, err := Asset("views/saved.tpl")
+	if err != nil {
+		handleNotFound(w)
+		return
+	}
+
+	output := strings.ReplaceAll(string(data), "%%TARGET%%", "/show/"+key)
+	io.WriteString(w, buildView(output))
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -19,23 +18,29 @@ func lookup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("key: " + key)
-	var output string
-
 	s, err := cache.Get(key)
-	sCasted := s.(secret.StorableSecret)
-	if sCasted.RemainingViews < 1 {
-		output = vb.views["notFound"]
-	} else {
-		sCasted.RemainingViews--
-		cache.Set(key, sCasted)
-		output = strings.ReplaceAll(vb.views["show"], "%%SECRET%%", sCasted.Value)
-		output = strings.ReplaceAll(output, "%%REMAININGVIEWS%%", strconv.Itoa(sCasted.RemainingViews))
-	}
 
 	if err != nil {
-		output = vb.views["notFound"]
+		handleNotFound(w)
+		return
 	}
 
-	io.WriteString(w, output)
+	sCasted := s.(secret.StorableSecret)
+	if sCasted.RemainingViews < 1 {
+		handleNotFound(w)
+		return
+	}
+
+	data, err := Asset("views/show.tpl")
+	if err != nil {
+		handleNotFound(w)
+		return
+	}
+
+	sCasted.RemainingViews--
+	cache.Set(key, sCasted)
+	output := strings.ReplaceAll(string(data), "%%SECRET%%", sCasted.Value)
+	output = strings.ReplaceAll(output, "%%REMAININGVIEWS%%", strconv.Itoa(sCasted.RemainingViews))
+
+	io.WriteString(w, buildView(output))
 }
