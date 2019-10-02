@@ -1,3 +1,4 @@
 
 httpd/bindata.go
+httpd/.env
 builds/secret*

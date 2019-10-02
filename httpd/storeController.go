@@ -3,9 +3,11 @@ package main
 import (
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
+	"github.com/open-function-computers-llc/secret-share/mail"
 	"github.com/open-function-computers-llc/secret-share/secret"
 
 	"github.com/dchest/uniuri"
@@ -24,27 +26,48 @@ func store(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	formValue := r.FormValue("secret")
-	if formValue == "" {
+	s := r.FormValue("secret")
+	if s == "" {
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		io.WriteString(w, "The secret you are trying to store can't be empty")
 		return
 	}
 
+	views := r.FormValue("viewCount")
+	if views == "" {
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		io.WriteString(w, "The total number of times you'd like to share this secret can't be empty")
+		return
+	}
+	vInt, err := strconv.Atoi(views)
+	if err != nil {
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		io.WriteString(w, "The total number of times you'd like to share this secret must be a number")
+		return
+	}
+
 	key := uniuri.NewLen(32)
-	s := secret.StorableSecret{
-		Value:          formValue,
-		RemainingViews: 5,
+	obj := secret.StorableSecret{
+		Value:          s,
+		RemainingViews: vInt,
 		Expires:        time.Now(),
 	}
-	cache.Set(key, s)
+	cache.Set(key, obj)
 
-	data, err := Asset("views/saved.tpl")
+	responseBody, err := Asset("views/saved.tpl")
 	if err != nil {
 		handleNotFound(w)
 		return
 	}
 
-	output := strings.ReplaceAll(string(data), "%%TARGET%%", "/show/"+key)
-	io.WriteString(w, buildView(output))
+	output := buildView(string(responseBody))
+
+	output = strings.ReplaceAll(output, "%%TARGET%%", "/show/"+key)
+	output = strings.ReplaceAll(output, "%%TITLE%%", "Your secret was saved")
+	io.WriteString(w, output)
+
+	// send an email?
+	if r.FormValue("autoshare") == "on" {
+		mail.Send(conf, key)
+	}
 }

@@ -7,13 +7,15 @@ import (
 )
 
 func runApp(c *cli.Context) error {
-	initCache()
+	bootstrap()
 
 	for path, handler := range webRoutes() {
 		http.HandleFunc(path, handler)
 	}
 	http.HandleFunc("/assets/", bundledAsset)
-	http.ListenAndServe(":8000", nil)
+
+	conf.Logger.Info("Now serving on port " + conf.Port)
+	http.ListenAndServe(":"+conf.Port, nil)
 	return nil
 }
 

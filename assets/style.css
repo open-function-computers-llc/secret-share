@@ -98,3 +98,34 @@ small {
     font-size: 75%;
     padding: 5px 0 0 0;
 }
+
+label {
+    display: flex;
+    padding: 10px 0;
+    justify-content: flex-end;
+}
+
+label:last-of-type {
+    padding: 0;
+}
+
+label span {
+    padding: 0 15px 0 0;
+}
+
+input[type=submit] {
+    border: 1px solid black;
+    background: black;
+    color: white;
+    text-transform: uppercase;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+input[type=submit]:hover {
+    color: black;
+    background: white;
+    border-color: white;
+}
