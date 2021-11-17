@@ -1,4 +1,2 @@
-
-httpd/bindata.go
-httpd/.env
+.env
 builds/secret*
