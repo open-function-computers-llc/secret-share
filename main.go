@@ -18,6 +18,9 @@ func main() {
 		panic(err)
 	}
 
-	s := server.New(stripped)
+	s, err := server.New(stripped)
+	if err != nil {
+		panic(err)
+	}
 	s.Serve()
 }

@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <div class="flex justify-content-between align-items-center">
-      <h1><a href="/">Super Secure Secret Share</a></h1>
+      <h1>
+        <a href="/">Super Secure Secret Share</a>
+      </h1>
       <div class="logo-wrapper">
         <img alt="Open Function" src="./assets/logo.png">
       </div>
@@ -68,6 +70,7 @@ h1 a {
 
 .logo-wrapper {
   width: 100px;
+  padding-top: 5px;
 }
 
 img {

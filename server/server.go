@@ -2,9 +2,10 @@ package server
 
 import (
 	"io/fs"
-	"net/http"
 	"os"
+	"strconv"
 
+	"github.com/open-function-computers-llc/secret-share/mail"
 	"github.com/open-function-computers-llc/secret-share/secret"
 	"github.com/sirupsen/logrus"
 )
@@ -15,30 +16,39 @@ type Server struct {
 	port       string
 	recipients map[string]string
 	secrets    map[string]secret.StorableSecret
+	mailer     *mail.Mailer
 }
 
-func New(filesystem fs.FS) Server {
+func New(filesystem fs.FS) (*Server, error) {
 	s := Server{}
-
 	s.secrets = map[string]secret.StorableSecret{}
-	s.logger = logrus.New()
 	s.filesystem = filesystem
+
+	// initiate logging
+	s.logger = logrus.New()
+
+	// initiate mailer
+	host := os.Getenv("SMTP_HOST")
+	user := os.Getenv("SMTP_USERNAME")
+	pass := os.Getenv("SMTP_PASSWORD")
+	port := os.Getenv("SMTP_PORT")
+	porti, err := strconv.Atoi(port)
+	if err != nil {
+		return &s, err
+	}
+	m, err := mail.New(s.logger, os.Getenv("MAIL_OUTPUT"), host, porti, user, pass)
+	if err != nil {
+		return &s, err
+	}
+	s.mailer = m
 
 	s.setUpRecipients()
 	s.bindRoutes()
 	s.port = os.Getenv("PORT")
 
-	return s
+	return &s, nil
 }
 
 func (s *Server) log(messages ...interface{}) {
 	s.logger.Info(messages...)
-}
-
-func (s *Server) Serve() {
-	if s.port == "" {
-		s.port = "8844"
-	}
-	s.log("Starting server on port " + s.port)
-	http.ListenAndServe(":"+s.port, nil)
 }

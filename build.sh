@@ -1,7 +1,6 @@
 #! /bin/bash
 
 # kill any currently running version of the app
-
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
     killall secret-share-li
 fi
@@ -9,6 +8,12 @@ fi
 if [[ "$OSTYPE" == "darwin"* ]]; then
     killall secret-share-da
 fi
+
+cd frontend
+# npm install
+npm run build
+cd ..
+
 
 # build and run the new binary
 env GOOS=linux GOARCH=amd64 go build -o builds/secret-share-linux
