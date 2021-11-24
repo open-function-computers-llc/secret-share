@@ -1,11 +1,13 @@
 <template>
   <div id="app">
     <div class="flex justify-content-between align-items-center">
-      <h1>Super Secure Secret Share</h1>
+      <h1><a href="/">Super Secure Secret Share</a></h1>
       <div class="logo-wrapper">
         <img alt="Open Function" src="./assets/logo.png">
       </div>
     </div>
+
+    <router-view/>
   </div>
 </template>
 
@@ -17,12 +19,12 @@ export default {
   },
   mounted() {
     document.title = "Share a secret"
-    this.$api.get("test")
   }
 }
 </script>
 
 <style>
+/* global styles go here in the root app */
 body, html {
   min-height: 100vh;
   margin: 0;
@@ -39,12 +41,21 @@ body, html {
   width: 1200px;
 }
 
-h1 {
+h1, h2, p {
   color: white;
+}
+
+h1 a {
+  color: white;
+  text-decoration: none;
 }
 
 .flex {
   display: flex;
+}
+
+.justify-content-center {
+  justify-content: center;
 }
 
 .justify-content-between {
@@ -62,4 +73,25 @@ h1 {
 img {
   width: 100%;
 }
+
+#nav {
+  padding: 30px;
+}
+
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
+}
+
+textarea, pre {
+  width: 100%;
+  border: 0;
+  height: 200px;
+  background-color: white;
+}
+
 </style>

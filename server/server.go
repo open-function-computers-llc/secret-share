@@ -5,22 +5,27 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gorilla/mux"
+	"github.com/open-function-computers-llc/secret-share/secret"
 	"github.com/sirupsen/logrus"
 )
 
 type Server struct {
 	logger     *logrus.Logger
-	router     *mux.Router
 	filesystem fs.FS
-	port       string // web host port number
+	port       string
+	recipients map[string]string
+	secrets    map[string]secret.StorableSecret
 }
 
 func New(filesystem fs.FS) Server {
 	s := Server{}
 
+	s.secrets = map[string]secret.StorableSecret{}
 	s.logger = logrus.New()
 	s.filesystem = filesystem
+
+	s.setUpRecipients()
+	s.bindRoutes()
 	s.port = os.Getenv("PORT")
 
 	return s
@@ -31,12 +36,6 @@ func (s *Server) log(messages ...interface{}) {
 }
 
 func (s *Server) Serve() {
-	// API routes
-	http.Handle("/api/test", s.handleTest())
-
-	frontendFS := http.FileServer(http.FS(s.filesystem))
-	http.Handle("/", frontendFS)
-
 	if s.port == "" {
 		s.port = "8844"
 	}
