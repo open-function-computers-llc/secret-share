@@ -122,10 +122,11 @@ li {
   background-color: #6f4bf3;
   padding: 5px 15px;
   display: block;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease, filter 0s linear;
   border: 0;
   font-size: 1.25rem;
   border-radius: 3px;
+  cursor: pointer;
 }
 
 li.active .button {
@@ -147,5 +148,9 @@ button.button {
   text-transform: uppercase;
   font-size: 1.5rem;
   padding: 10px 30px;
+}
+
+.button:hover {
+  filter: brightness(1.1);
 }
 </style>
