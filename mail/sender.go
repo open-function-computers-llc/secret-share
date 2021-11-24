@@ -1,37 +1,52 @@
 package mail
 
 import (
-	"github.com/open-function-computers-llc/secret-share/config"
+	"errors"
+
 	"github.com/sirupsen/logrus"
 	gomail "gopkg.in/gomail.v2"
 )
 
-// log - pointer to a shared logger
-var log *logrus.Logger
+func New(l *logrus.Logger, o string, host string, port int, user string, pass string) (*Mailer, error) {
+	m := Mailer{
+		logger:   l,
+		output:   o,
+		host:     host,
+		port:     port,
+		username: user,
+		password: pass,
+	}
+	if message, ok := m.Validate(); !ok {
+		return &m, errors.New(message)
+	}
+
+	return &m, nil
+}
 
 // Send - check package configuration and send an email or log it
-func Send(c config.Config, key string) {
-	if c.Logger == nil || c.Mail == "" {
-		panic("Logging and Config not set correctly")
-	}
-	log = c.Logger
-
-	if c.Mail == "log" {
-		log.Info(notificiationEmail(c, key))
-		return
+func (m *Mailer) Send(to, url string) error {
+	if m.output == "log" {
+		m.logger.Info("Sent email to: " + to)
+		m.logger.Info(notificiationEmail(url))
+		return nil
 	}
 
-	go func() {
-		log.Info("Sending email..." + notificiationEmail(c, key))
-		m := gomail.NewMessage()
-		m.SetHeader("From", "bot@openfunctioncomputers.com")
-		m.SetHeader("To", "kurtis@openfunctioncomputers.com")
-		m.SetHeader("Subject", "A new secret was shared with you")
-		m.SetBody("text/html", notificiationEmail(c, key))
+	if m.output == "smtp" {
+		go func() {
+			m.logger.Info("Sending email to: " + to)
+			message := gomail.NewMessage()
+			message.SetHeader("From", "bot@openfunctioncomputers.com")
+			message.SetHeader("To", to)
+			message.SetHeader("Subject", "A new secret was shared with you")
+			message.SetBody("text/html", notificiationEmail(url))
 
-		d := gomail.NewDialer(c.MailHost, c.MailPort, c.MailUserName, c.MailPassword)
-		if err := d.DialAndSend(m); err != nil {
-			log.Error(err)
-		}
-	}()
+			d := gomail.NewDialer(m.host, m.port, m.username, m.password)
+			if err := d.DialAndSend(message); err != nil {
+				m.logger.Error(err)
+			}
+		}()
+		return nil
+	}
+
+	return errors.New("Invalid state to send emails...")
 }
