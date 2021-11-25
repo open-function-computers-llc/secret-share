@@ -10,6 +10,7 @@
     </div>
 
     <router-view/>
+    <p>&nbsp;</p>
   </div>
 </template>
 
@@ -54,6 +55,10 @@ h1 a {
 
 .flex {
   display: flex;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
 }
 
 .justify-content-center {
