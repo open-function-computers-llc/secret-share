@@ -100,6 +100,7 @@ textarea, pre {
   border: 0;
   height: 200px;
   background-color: white;
+  overflow: scroll;
 }
 
 </style>
