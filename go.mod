@@ -10,6 +10,6 @@ require (
 )
 
 require (
-	golang.org/x/sys v0.0.0-20191026070338-33540a1f6037 // indirect
+	golang.org/x/sys v0.1.0 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 )
