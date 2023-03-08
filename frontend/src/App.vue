@@ -5,30 +5,29 @@
         <a href="/">Super Secure Secret Share</a>
       </h1>
       <div class="logo-wrapper">
-        <img alt="Open Function" src="./assets/logo.png">
+        <img alt="Open Function" src="./assets/logo.png" />
       </div>
     </div>
 
-    <router-view/>
+    <router-view />
     <p>&nbsp;</p>
   </div>
 </template>
 
 <script>
-
 export default {
-  name: 'App',
-  components: {
-  },
+  name: "App",
+  components: {},
   mounted() {
-    document.title = "Share a secret"
-  }
-}
+    document.title = "Share a secret";
+  },
+};
 </script>
 
 <style>
 /* global styles go here in the root app */
-body, html {
+body,
+html {
   min-height: 100vh;
   margin: 0;
   background: #252525;
@@ -44,7 +43,9 @@ body, html {
   width: 1200px;
 }
 
-h1, h2, p {
+h1,
+h2,
+p {
   color: white;
 }
 
@@ -95,11 +96,15 @@ img {
   color: #42b983;
 }
 
-textarea, pre {
+textarea,
+pre {
   width: 100%;
   border: 0;
   height: 200px;
   background-color: white;
+  text-align: left;
+  padding: 5px;
+  white-space: break-spaces;
+  overflow-y: auto;
 }
-
 </style>
