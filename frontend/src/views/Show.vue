@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
     data() {
         return {
@@ -20,7 +21,7 @@ export default {
         }
     },
     mounted() {
-        this.$api.get("secret?id="+this.$route.params.id).then((r) => {
+        axios.get("/api/secret?id="+this.$route.params.id).then((r) => {
             this.secret = r.data.Value;
             this.viewsLeft = r.data.RemainingViews;
         }).catch((e) => {

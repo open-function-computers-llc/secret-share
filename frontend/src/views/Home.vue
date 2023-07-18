@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'Home',
   components: { },
@@ -68,7 +69,7 @@ export default {
       postData.append("numberOfShares", this.numberOfShares);
       postData.append("shareWith", this.selectedRecipients);
 
-      this.$api.post("/store", postData, {
+      axios.post("/api/store", postData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
@@ -84,7 +85,7 @@ export default {
     }
   },
   mounted() {
-    this.$api.get("recipients").then((r) => {
+    axios.get("/api/recipients").then((r) => {
       for (let index = 0; index < r.data.length; index++) {
         this.availableRecipients.unshift(r.data[index]);
       }
