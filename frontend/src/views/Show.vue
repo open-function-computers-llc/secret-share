@@ -3,6 +3,7 @@
         <h2>Here's the secret:</h2>
         <pre>{{ secret }}</pre>
         <p>Can be viewed {{ viewsLeft }} more time<template v-if="viewsLeft !== 1">s</template></p>
+        <p>Can be viewed until {{ timeLeft }}<template v-if="timeLeft > Date.now"></template></p>
     </div>
 
     <div v-else>
@@ -17,6 +18,7 @@ export default {
         return {
             secret: "",
             viewsLeft: 0,
+            timeLeft: 0,
             errorMessage: "",
         }
     },
@@ -24,6 +26,8 @@ export default {
         axios.get("/api/secret?id="+this.$route.params.id).then((r) => {
             this.secret = r.data.Value;
             this.viewsLeft = r.data.RemainingViews;
+            this.timeLeft = r.data.TimeString;
+            
         }).catch((e) => {
             this.errorMessage = e.response.data.error;
         });

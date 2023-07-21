@@ -1,6 +1,9 @@
 package server
 
-import "net/http"
+import (
+	"net/http"
+	"time"
+)
 
 func (s *Server) handleShowSecret() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -23,6 +26,14 @@ func (s *Server) handleShowSecret() http.HandlerFunc {
 		}
 		foundSecret.RemainingViews = foundSecret.RemainingViews - 1
 		if foundSecret.RemainingViews < 0 {
+			delete(s.secrets, foundSecret.ID)
+			output := map[string]string{
+				"error": "Secret " + id + " not found",
+			}
+			s.send404Json(w, output)
+			return
+		}
+		if foundSecret.EndTime.Before(time.Now()) {
 			delete(s.secrets, foundSecret.ID)
 			output := map[string]string{
 				"error": "Secret " + id + " not found",
