@@ -31,7 +31,7 @@ func StoreNewSecret(s string, numViews int, addTime int) (StorableSecret, error)
 	newSecret.Value = s
 	newSecret.RemainingViews = numViews
 	newSecret.EndTime = time.Now().Add(time.Hour * time.Duration(addTime))
-	newSecret.TimeString = newSecret.EndTime.Format(time.RFC822)
+	newSecret.TimeString = newSecret.EndTime.Format("2006/01/02 3:4:5 pm")
 	return newSecret, nil
 }
 
