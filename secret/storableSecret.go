@@ -34,7 +34,3 @@ func StoreNewSecret(s string, numViews int, addTime int) (StorableSecret, error)
 	newSecret.TimeString = newSecret.EndTime.Format("2006/01/02 3:4:5 pm")
 	return newSecret, nil
 }
-
-func getTime(askdf time.Time) (time.Time, error) {
-	return time.Now(), nil
-}
