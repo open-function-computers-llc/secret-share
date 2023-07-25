@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-func main(s *Server) {
+func ticker(s *Server) {
 	ticker := time.NewTicker(1 * time.Hour)
 
 	// Creating channel using make

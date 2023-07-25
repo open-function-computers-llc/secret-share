@@ -46,7 +46,9 @@ func New(filesystem fs.FS) (*Server, error) {
 	s.bindRoutes()
 	s.port = os.Getenv("PORT")
 
+	ticker(&s)
 	return &s, nil
+
 }
 
 func (s *Server) log(messages ...interface{}) {
