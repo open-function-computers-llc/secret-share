@@ -1,6 +1,6 @@
 module github.com/open-function-computers-llc/secret-share
 
-go 1.17
+go 1.22
 
 require (
 	github.com/dchest/uniuri v1.2.0

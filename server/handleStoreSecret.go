@@ -27,7 +27,8 @@ func (s *Server) handleStoreSecret() http.HandlerFunc {
 			s.send500Json(w, output)
 			return
 		}
-		secret, err := secret.StoreNewSecret(r.PostForm.Get("secret"), numShares)
+		viewTime, err := strconv.Atoi(r.PostForm.Get("time"))
+		secret, err := secret.StoreNewSecret(r.PostForm.Get("secret"), numShares, viewTime)
 		if err != nil {
 			output := map[string]string{
 				"error": err.Error(),

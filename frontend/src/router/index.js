@@ -1,26 +1,25 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import { createRouter, createWebHashHistory } from 'vue-router'
+import Home from '@/views/Home.vue'
 
-Vue.use(VueRouter)
+export default createRouter({
+    history: createWebHashHistory(),
+    routes: [
+      {
+        path: '/',
+        name: 'Home',
+        component: Home,
+      },
+      {
+        path: '/show/:id',
+        name: 'Button',
+        component: () => import('@/views/Button.vue')
+      },
+      {
+        path: '/show=true/:id',
+        name: 'Show',
+        component: () => import('@/views/Show.vue')
+      }
+    ],
+  })
+  
 
-const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/show/:id',
-    name: 'Show',
-    component: () => import(/* webpackChunkName: "show" */ '../views/Show.vue')
-  }
-]
-
-const router = new VueRouter({
-  mode: 'hash',
-  base: process.env.BASE_URL,
-  routes
-})
-
-export default router

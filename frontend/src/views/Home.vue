@@ -14,6 +14,17 @@
       <p>How many times do you want this secret to be viewable?
       <input v-model="numberOfShares" type="number" min="3" max="10" /></p>
 
+     
+      <label for="time"><p>How long should this secret be viewable?</p></label> 
+      <select name="time" id="time" v-model = "time"> 
+          <option value="1">1 Hour</option> 
+          <option value="24">1 Day</option> 
+          <option value="168">1 Week</option> 
+          <option value="730">1 Month</option> 
+          <option value="8760">1 Year</option> 
+          <option value="876000">Forever</option> 
+      </select>
+
       <div class="button-wrapper">
         <button class="button" @click="store">Share</button>
       </div>
@@ -31,6 +42,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'Home',
   components: { },
@@ -38,6 +50,7 @@ export default {
     return {
       secret: "",
       numberOfShares: 5,
+      time: '24',
       availableRecipients: ['Nobody'],
       selectedRecipients: ['Nobody'],
       newSecret: {}, // after the secret is saved, this will be populated with the object
@@ -67,8 +80,9 @@ export default {
       postData.append("secret", this.secret);
       postData.append("numberOfShares", this.numberOfShares);
       postData.append("shareWith", this.selectedRecipients);
+      postData.append("time", this.time);
 
-      this.$api.post("/store", postData, {
+      axios.post("/api/store", postData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
@@ -84,7 +98,7 @@ export default {
     }
   },
   mounted() {
-    this.$api.get("recipients").then((r) => {
+    axios.get("/api/recipients").then((r) => {
       for (let index = 0; index < r.data.length; index++) {
         this.availableRecipients.unshift(r.data[index]);
       }
