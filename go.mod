@@ -1,6 +1,6 @@
 module github.com/open-function-computers-llc/secret-share
 
-go 1.17
+go 1.22
 
 require (
 	github.com/dchest/uniuri v1.2.0
@@ -10,7 +10,6 @@ require (
 )
 
 require (
-	github.com/robfig/cron/v3 v3.0.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 )
