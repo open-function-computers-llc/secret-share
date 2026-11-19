@@ -29,8 +29,8 @@ export default {
 :root {
   --bg: #1e1e1e;
   --bg-2: #181818;
-  --panel: #252526;
-  --panel-2: #2d2d30;
+  --panel: #2f3238;
+  --panel-2: #3b3f49;
   --text: #d4d4d4;
   --dim: #9d9d9d;
   --faint: #8a8a8a;
