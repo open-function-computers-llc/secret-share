@@ -233,6 +233,6 @@ button.button {
 
 .stepper__btn:active {
   background: var(--brand-soft);
-  color: #fff;
+  color: var(--on-brand);
 }
 </style>

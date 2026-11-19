@@ -1,0 +1,46 @@
+/*
+  Default theme, loaded through THEME_CSS_PATH. Every color, font and size the
+  app uses is defined here. Copy this file to make your own theme. It loads
+  after the built-in styles, so you can also add any other CSS rules you need.
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+
+:root {
+  /* page */
+  --bg: #1e1e1e;
+  --bg-2: #181818;
+  --shadow: rgba(0, 0, 0, 0.35);
+
+  /* inputs and panels */
+  --panel: #2f3238;
+  --panel-2: #3b3f49;
+  --border: rgba(255, 255, 255, 0.09);
+  --border-acc: rgba(144, 144, 245, 0.4);
+
+  /* text */
+  --heading: #ffffff;
+  --text: #d4d4d4;
+  --dim: #9d9d9d;
+  --faint: #8a8a8a;
+
+  /* buttons and logo badge */
+  --brand: #5858e8;
+  --brand-2: #7b7bf2;
+  --brand-soft: rgba(88, 88, 232, 0.28);
+  --on-brand: #ffffff;
+
+  /* accent */
+  --acc: #9090f5;
+  --acc-soft: rgba(144, 144, 245, 0.16);
+
+  /* "copied" success state */
+  --ok: #27c93f;
+  --on-ok: #06210d;
+
+  --radius: 9px;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas,
+    monospace;
+}

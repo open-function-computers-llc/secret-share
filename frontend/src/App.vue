@@ -2,10 +2,10 @@
 <div id="app">
   <div class="flex justify-content-between align-items-center">
     <h1>
-      <a href="/">Super Secure Secret Share</a>
+      <a href="/">{{ theme.title }}</a>
     </h1>
-    <div class="logo-wrapper">
-      <img alt="Open Function Computers" src="./assets/ofco-logo.svg" />
+    <div v-if="theme.logo" class="logo-wrapper">
+      <img :alt="theme.logoAlt" :src="theme.logo" />
     </div>
   </div>
 
@@ -14,11 +14,24 @@
 </template>
 
 <script>
+// all branding comes from the server's env (see server/theme.go)
 export default {
   name: "App",
-  components: {},
-  mounted() {
-    document.title = "Share a secret";
+  data() {
+    return {
+      theme: {},
+    };
+  },
+  async mounted() {
+    const response = await fetch("/api/theme");
+    this.theme = await response.json();
+
+    document.title = this.theme.title;
+    if (this.theme.themeColor) {
+      document
+        .querySelector('meta[name="theme-color"]')
+        .setAttribute("content", this.theme.themeColor);
+    }
   },
 };
 </script>
@@ -26,31 +39,8 @@ export default {
 <style>
 /* global styles go here in the root app */
 
-:root {
-  --bg: #1e1e1e;
-  --bg-2: #181818;
-  --panel: #2f3238;
-  --panel-2: #3b3f49;
-  --text: #d4d4d4;
-  --dim: #9d9d9d;
-  --faint: #8a8a8a;
-  --border: rgba(255, 255, 255, 0.09);
-  --border-acc: rgba(144, 144, 245, 0.4);
-  --brand: #5858e8;
-  --brand-2: #7b7bf2;
-  --brand-soft: rgba(88, 88, 232, 0.28);
-  --acc: #9090f5;
-  --acc-soft: rgba(144, 144, 245, 0.16);
-  --ok: #27c93f;
-  --dot-r: #ff5f56;
-  --dot-y: #ffbd2e;
-  --dot-g: #27c93f;
-  --radius: 9px;
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, -apple-system,
-    "Segoe UI", Roboto, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas,
-    monospace;
-}
+/* colors, fonts and sizes are CSS variables defined by the THEME_CSS_PATH
+   stylesheet (see theme/default.css) */
 
 html,
 body {
@@ -61,10 +51,10 @@ body {
 body {
   background-color: var(--bg);
   background-image: radial-gradient(1100px 600px at 12% -10%,
-      rgba(88, 88, 232, 0.18),
+      color-mix(in srgb, var(--brand) 18%, transparent),
       transparent 60%),
     radial-gradient(900px 520px at 100% 0%,
-      rgba(144, 144, 245, 0.12),
+      color-mix(in srgb, var(--acc) 12%, transparent),
       transparent 55%),
     linear-gradient(var(--bg), var(--bg-2));
   background-attachment: fixed;
@@ -90,7 +80,7 @@ h1 {
 }
 
 h1 a {
-  color: #fff;
+  color: var(--heading);
   text-decoration: none;
 }
 
@@ -113,14 +103,14 @@ p {
   font-weight: 600;
   font-size: 1.1rem;
   line-height: 1.2;
-  color: #fff;
+  color: var(--on-brand);
   background: var(--brand);
   border: 1px solid transparent;
   border-radius: var(--radius);
   padding: 0.6rem 1.25rem;
   text-decoration: none;
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 6px 18px var(--shadow);
   transition: transform 0.15s ease, box-shadow 0.22s ease,
     background-color 0.22s ease, color 0.22s ease, border-color 0.22s ease;
 }
@@ -143,9 +133,9 @@ p {
 
 li.active .button {
   background: var(--brand);
-  color: #fff;
-  border-color: #fff;
-  box-shadow: 0 0 18px rgba(123, 123, 242, 0.7);
+  color: var(--on-brand);
+  border-color: var(--on-brand);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--brand-2) 70%, transparent);
 }
 
 /* copy-to-clipboard button (shared) */
@@ -168,8 +158,8 @@ li.active .button {
 .button.copied {
   background: var(--ok);
   border-color: var(--ok);
-  color: #06210d;
-  box-shadow: 0 10px 30px rgba(39, 201, 63, 0.35);
+  color: var(--on-ok);
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--ok) 35%, transparent);
   animation: pop 0.3s ease;
 }
 
@@ -223,10 +213,12 @@ select {
   -webkit-appearance: none;
   appearance: none;
   padding-right: 2.4rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239d9d9d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  /* chevron drawn with two gradients so it follows the theme's --dim color */
+  background-image: linear-gradient(45deg, transparent 50%, var(--dim) 50%),
+    linear-gradient(135deg, var(--dim) 50%, transparent 50%);
   background-repeat: no-repeat;
-  background-position: right 0.8rem center;
-  background-size: 1em;
+  background-position: right 1.25rem center, right 0.9rem center;
+  background-size: 0.35rem 0.35rem;
 }
 
 textarea:focus,
@@ -235,7 +227,7 @@ select:focus {
   outline: none;
   border-color: var(--border-acc);
   box-shadow: 0 0 0 3px var(--acc-soft);
-  background: var(--panel-2);
+  background-color: var(--panel-2);
 }
 
 textarea::placeholder {
@@ -262,7 +254,7 @@ pre {
   overflow-x: auto;
   white-space: pre-wrap;
   word-break: break-word;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 10px 30px var(--shadow);
 }
 
 /* layout utilities used by templates */
