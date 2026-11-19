@@ -11,7 +11,8 @@ func (s *Server) handleShowSecret() http.HandlerFunc {
 		id := r.Form.Get("id")
 		if id == "" {
 			output := map[string]string{
-				"error": "Invalid request. Make sure you define the `id` query variable.",
+				"error":  "Invalid request. Make sure you define the `id` query variable.",
+				"status": "invalid",
 			}
 			s.send404Json(w, output)
 			return
@@ -19,7 +20,8 @@ func (s *Server) handleShowSecret() http.HandlerFunc {
 		foundSecret, ok := s.secrets[id]
 		if !ok {
 			output := map[string]string{
-				"error": "Secret " + id + " not found",
+				"error":  "Secret " + id + " not found",
+				"status": "notfound",
 			}
 			s.send404Json(w, output)
 			return
@@ -28,7 +30,8 @@ func (s *Server) handleShowSecret() http.HandlerFunc {
 		if foundSecret.RemainingViews < 0 {
 			delete(s.secrets, foundSecret.ID)
 			output := map[string]string{
-				"error": "Secret " + id + " not found",
+				"error":  "Secret " + id + " not found",
+				"status": "expired",
 			}
 			s.send404Json(w, output)
 			return
@@ -36,7 +39,8 @@ func (s *Server) handleShowSecret() http.HandlerFunc {
 		if foundSecret.EndTime.Before(time.Now()) {
 			delete(s.secrets, foundSecret.ID)
 			output := map[string]string{
-				"error": "Secret " + id + " not found",
+				"error":  "Secret " + id + " not found",
+				"status": "expired",
 			}
 			s.send404Json(w, output)
 			return
