@@ -17,6 +17,7 @@ type Server struct {
 	recipients map[string]string
 	secrets    map[string]secret.StorableSecret
 	mailer     *mail.Mailer
+	theme      theme
 }
 
 func New(filesystem fs.FS) (*Server, error) {
@@ -43,6 +44,10 @@ func New(filesystem fs.FS) (*Server, error) {
 	s.mailer = m
 
 	s.setUpRecipients()
+	s.theme = loadTheme()
+	if s.theme.cssPath == "" {
+		s.log("THEME_CSS_PATH is not set, the site will be unstyled (see theme/default.css)")
+	}
 	s.bindRoutes()
 	s.port = os.Getenv("PORT")
 

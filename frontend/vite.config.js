@@ -17,14 +17,13 @@ export default defineConfig({
     },
   },
   server: {
-    proxy: {
-      "/api": {
-        target: "http://localhost:8088",
-        changeOrigin: true,
-        secure: false,      
-        ws: true,
-      },
-    },
+    // everything the go server provides, including the env driven theme
+    proxy: Object.fromEntries(
+      ["/api", "/theme.css", "/logo", "/favicon.ico"].map((path) => [
+        path,
+        { target: "http://localhost:8088", changeOrigin: true },
+      ])
+    ),
   },
 }
 )
